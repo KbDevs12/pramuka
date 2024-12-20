@@ -1,5 +1,4 @@
 <?php
-// get_participants.php
 session_start();
 require('config/app.php');
 require('func/sanitize.php');
@@ -16,7 +15,7 @@ if (!$competition_id || !$trx_code) {
 
 $query = "SELECT p.* FROM peserta p 
           JOIN transaksi t ON p.idTransaksi = t.id 
-          WHERE p.id = ? AND t.kodeTransaksi = ?";
+          WHERE p.id_perlombaan = ? AND t.kodeTransaksi = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param('is', $competition_id, $trx_code);
 $stmt->execute();

@@ -56,7 +56,7 @@ $stmt = $conn->prepare($query);
 $stmt->bind_param('is', $id_transaksi, $base64Image);
 
 if ($stmt->execute()) {
-    echo "<p>Bukti transaksi berhasil diunggah.</p>";
+    header('Location : index.php');
 } else {
     echo "<p>Terjadi kesalahan saat menyimpan bukti transaksi. Silakan coba lagi.</p>";
 }

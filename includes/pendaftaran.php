@@ -6,7 +6,7 @@
 
     <div class="bg-white rounded-2xl shadow-lg max-w-2xl mx-auto">
         <!-- Form header -->
-        <div class="bg-blue-600 rounded-t-2xl px-6 py-8 text-center">
+        <div class="bg-secondary rounded-t-2xl px-6 py-8 text-center">
             <h1 class="font-bold text-2xl md:text-3xl text-white">Formulir Pendaftaran</h1>
             <p class="text-blue-100 mt-2">Silahkan isi data dengan lengkap dan benar</p>
         </div>
@@ -76,7 +76,6 @@
                     <option value="">Pilih kategori perlombaan</option>
                     <option value="lkbb">LKBB</option>
                     <option value="materi">Materi</option>
-                    <option value="gabungan">LKBB + Materi</option>
                 </select>
             </div>
 
@@ -111,7 +110,7 @@
 
             <div class="pt-6">
                 <button type="submit"
-                    class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg text-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 transition duration-200">
+                    class="w-full bg-secondary text-white py-3 px-6 hover:-translate-y-1 rounded-lg text-lg font-semibold focus:outline-none focus:ring-4 focus:ring-blue-200 transition transition-all duration-200">
                     Daftar Sekarang
                 </button>
             </div>

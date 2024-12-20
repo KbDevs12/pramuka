@@ -65,7 +65,7 @@
     while ($row = $competitions_result->fetch_assoc()) {
         $competitions[$row['id']] = $row;
     }
-    if ($transaction['status'] === 'pending' && $has_proof) {
+    if ($transaction['status'] === 'pending' && !$has_proof) {
         ?>
         <div class="container mx-auto my-12 p-8 bg-white shadow-xl rounded-lg text-center">
             <h1 class="text-3xl font-bold text-blue-600">Transaksi Sedang Diproses</h1>
@@ -76,7 +76,7 @@
             </p>
         </div>
         <?php
-    } elseif ($transaction['status'] === 'pending' && !$has_proof) {
+    } elseif ($transaction['status'] === 'pending' && $has_proof) {
         // Display payment form
         ?>
         <div class="container mx-auto my-12 p-8 bg-white shadow-xl rounded-lg">
@@ -250,9 +250,9 @@
                     // Fetch existing participants if any
                     const response = await fetch(`get_participants.php?competition_id=${competitionId}&trx_code=<?php echo $trxcode; ?>`);
                     const data = await response.json();
-
+                    console.log(data)
                     if (data.exists) {
-                        // Show edit form with existing data
+
                         showEditForm(data.participants, competitionId);
                     } else {
                         // Show new registration form
@@ -267,19 +267,18 @@
             function showEditForm(participants, competitionId) {
                 const container = document.getElementById('participant-container');
                 container.innerHTML = '';
-
                 const formHtml = `
-                                                                                    <form action="update_participants.php" method="POST" enctype="multipart/form-data" class="space-y-6">
-                                                                                        <input type="hidden" name="competition_id" value="${competitionId}">
-                                                                                        <input type="hidden" name="trx_code" value="<?php echo $trxcode; ?>">
-                                                                                        ${generateParticipantForms(participants)}
-                                                                                        <div class="text-center">
-                                                                                            <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                                                                                Update Data Peserta
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </form>
-                                                                                `;
+                                                                                                                                                                        <form action="update_participants.php" method="POST" enctype="multipart/form-data" class="space-y-6">
+                                                                                                                                                                            <input type="hidden" name="competition_id" value="${competitionId}">
+                                                                                                                                                                            <input type="hidden" name="trx_code" value="<?php echo $trxcode; ?>">
+                                                                                                                                                                            ${generateParticipantForms(participants)}
+                                                                                                                                                                            <div class="text-center">
+                                                                                                                                                                                <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                                                                                                                                                                    Update Data Peserta
+                                                                                                                                                                                </button>
+                                                                                                                                                                            </div>
+                                                                                                                                                                        </form>
+                                                                                                                                                                    `;
 
                 container.innerHTML = formHtml;
                 initializeImagePreviews();
@@ -291,43 +290,94 @@
                 const container = document.getElementById('participant-container');
 
                 const formHtml = `
-                                                                                    <form action="submit_participants.php" method="POST" enctype="multipart/form-data" class="space-y-6">
-                                                                                        <input type="hidden" name="competition_id" value="${competitionId}">
-                                                                                        <input type="hidden" name="trx_code" value="<?php echo $trxcode; ?>">
-                                                                                        ${generateEmptyParticipantForms(participantCount)}
-                                                                                        <div class="text-center">
-                                                                                            <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                                                                                Daftar Peserta
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </form>
-                                                                                `;
+                                                                                                                                                                        <form action="submit_participants.php" method="POST" enctype="multipart/form-data" class="space-y-6">
+                                                                                                                                                                            <input type="hidden" name="competition_id" value="${competitionId}">
+                                                                                                                                                                            <input type="hidden" name="trx_code" value="<?php echo $trxcode; ?>">
+                                                                                                                                                                            ${generateEmptyParticipantForms(participantCount)}
+                                                                                                                                                                            <div class="text-center">
+                                                                                                                                                                                <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                                                                                                                                                                    Daftar Peserta
+                                                                                                                                                                                </button>
+                                                                                                                                                                            </div>
+                                                                                                                                                                        </form>
+                                                                                                                                                                    `;
 
                 container.innerHTML = formHtml;
                 initializeImagePreviews();
             }
 
             function generateParticipantForms(participants) {
-                const template = document.getElementById('participant-form-template').innerHTML;
+                // Pastikan participants selalu dalam bentuk array
+                if (!Array.isArray(participants)) {
+                    participants = [participants];
+                }
+
                 return participants.map((participant, index) => {
-                    let form = template.replaceAll('{index}', index + 1);
-                    form = form.replace('required class="w-full', `value="${participant.nama}" required class="w-full`);
-                    form = form.replace('name="participants[{index}][tempat_lahir]"',
-                        `name="participants[${index}][tempat_lahir]" value="${participant.tempat_lahir}"`);
-                    form = form.replace('name="participants[{index}][tanggal_lahir]"',
-                        `name="participants[${index}][tanggal_lahir]" value="${participant.tanggal_lahir}"`);
-                    form = form.replace('name="participants[{index}][jabatan]"',
-                        `name="participants[${index}][jabatan]" value="${participant.jabatan}"`);
+                    return `
+                <div class="participant-form border-t pt-6 mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Peserta ${index + 1}</h3>
 
-                    if (participant.image) {
-                        form = form.replace('style="display: none;"', '');
-                        form = form.replace('src=""', `src="uploads/participants/${participant.image}"`);
-                    }
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                            <input type="text" 
+                                   name="participants[${index + 1}][nama]" 
+                                   value="${participant.nama || ''}"
+                                   required 
+                                   class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
 
-                    return form;
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
+                            <input type="text" 
+                                   name="participants[${index + 1}][tempat_lahir]" 
+                                   value="${participant.tempat_lahir || ''}"
+                                   required 
+                                   class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
+                            <input type="date" 
+                                   name="participants[${index + 1}][tanggal_lahir]" 
+                                   value="${participant.tanggal_lahir || ''}"
+                                   required 
+                                   class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Jabatan</label>
+                            <input type="text" 
+                                   name="participants[${index + 1}][jabatan]" 
+                                   value="${participant.jabatan || ''}"
+                                   required 
+                                   class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700">Foto Peserta</label>
+                        <input type="file" 
+                               name="participants[${index + 1}][image]" 
+                               accept="image/*"
+                               class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
+                        <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, atau JPEG (Max 2MB)</p>
+                    </div>
+
+                    <div class="mt-4 preview-image-container ${participant.image ? '' : 'hidden'}">
+                        <img src="${participant.image ? 'data:image/jpeg;base64,' + participant.image : ''}" 
+                             alt="Preview" 
+                             class="preview-image max-w-xs h-auto object-contain rounded-lg">
+                        <button type="button" 
+                                class="text-red-600 mt-2" 
+                                onclick="removeImage(${index + 1})">
+                            Hapus Foto
+                        </button>
+                    </div>
+                </div>
+            `;
                 }).join('');
             }
-
             function generateEmptyParticipantForms(count) {
                 const template = document.getElementById('participant-form-template').innerHTML;
                 return Array.from({ length: count }, (_, i) =>

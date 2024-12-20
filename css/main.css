@@ -1,10 +1,38 @@
+:root {
+  --primary: #044970;
+  --secondary: #cc4644;
+  --white: #ffffff;
+  --yellow: #eab308;
+}
+
 /* Base styles */
+
+.bg-primary {
+  background-color: var(--primary);
+}
+.text-primary {
+  color: var(--primary);
+}
+.bg-secondary {
+  background-color: var(--secondary);
+}
+.text-secondary {
+  color: var(--secondary);
+}
+
+.text-nav:hover {
+  color: var(--secondary);
+}
+
+.bg-btn {
+  background-color: var(--primary);
+}
+
 .hero {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
 }
-
 .hero .swiper-slide {
   position: relative;
   height: 80vh;

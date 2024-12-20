@@ -19,13 +19,13 @@ function normalize_school_name($name)
     return $name;
 }
 
-function is_similar($name1, $name2, $threshold = 80)
-{
-    $distance = levenshtein($name1, $name2);
-    $max_length = max(strlen($name1), strlen($name2));
-    $similarity = (1 - $distance / $max_length) * 100;
-    return $similarity >= $threshold;
-}
+// function is_similar($name1, $name2, $threshold = 40)
+// {
+//     $distance = levenshtein($name1, $name2);
+//     $max_length = max(strlen($name1), strlen($name2));
+//     $similarity = (1 - $distance / $max_length) * 100;
+//     return $similarity >= $threshold;
+// }
 
 function get_price($kategori_perlombaan)
 {
@@ -70,7 +70,6 @@ $valid_periods = [
     ['start' => '2025-02-21', 'end' => '2025-03-26']
 ];
 
-// Check if the current date falls within any of the valid periods
 foreach ($valid_periods as $period) {
     if ($current_date >= $period['start'] && $current_date <= $period['end']) {
         $registration_open = true;
@@ -107,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $transaction_count = 0;
     while ($row = $result->fetch_assoc()) {
         $db_name = normalize_school_name($row['namaSekolah']);
-        if (is_similar($normalized_name, $db_name)) {
+        if ($normalized_name == $db_name) {
             $transaction_count++;
         }
     }
@@ -200,10 +199,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Header Section -->
         <div class="text-center mb-8">
             <h1 class="text-3xl font-bold text-blue-600">Silahkan Lakukan Pembayaran</h1>
-            <p class="font-bold text-2xl"><?php echo "Rp" . number_format($jumlah_dibayarkan, 0, ',', '.') ?></p>
+            <p class="font-bold text-2xl"><?php echo "Rp" . number_format($jumlah_dibayarkan, 0, ',', '.'); ?></p>
             <p class="text-lg mt-2">Unggah bukti pembayaran Anda untuk melanjutkan proses pendaftaran.</p>
             <p class="text-gray-700 text-lg">Kode Pembayaran Anda:</p>
-            <p class="text-2xl text-yellow-200 font-bold"><?php echo $kodePembayaran; ?></p>
+            <p id="kodePembayaran" class="text-2xl text-yellow-200 font-bold"><?php echo $kodePembayaran; ?></p>
+            <button onclick="salinKode()"
+                class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none">
+                Salin Kode
+            </button>
+            <p id="notifikasi" class="text-green-600 font-medium mt-2 hidden">Kode berhasil disalin!</p>
         </div>
 
         <!-- Payment Info -->
@@ -247,6 +251,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <!-- Scripts -->
     <script src="js/menu.js"></script>
+    <script>
+        function salinKode() {
+            const kode = document.getElementById('kodePembayaran').textContent;
+
+            navigator.clipboard.writeText(kode).then(() => {
+                const notifikasi = document.getElementById('notifikasi');
+                notifikasi.classList.remove('hidden');
+
+                setTimeout(() => {
+                    notifikasi.classList.add('hidden');
+                }, 300);
+            }).catch(err => {
+                console.error('gagal menyalin kode', err);
+            });
+        }
+    </script>
     <script src="js/main.js"></script>
 </body>
 
