@@ -1,0 +1,92 @@
+/* Base styles */
+.hero {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.hero .swiper-slide {
+  position: relative;
+  height: 80vh;
+  min-height: 400px; /* Minimum height for very small screens */
+}
+
+.hero .swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero .slide-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  padding: 1rem;
+}
+
+.hero .slide-overlay h1 {
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.hero .slide-overlay p {
+  font-size: clamp(0.875rem, 3vw, 1.25rem);
+  font-weight: 400;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Mobile devices */
+@media screen and (max-width: 640px) {
+  .hero .swiper-slide {
+    height: 60vh;
+  }
+
+  .hero .slide-overlay {
+    padding: 0.75rem;
+  }
+}
+
+/* Tablets */
+@media screen and (min-width: 641px) and (max-width: 1024px) {
+  .hero .swiper-slide {
+    height: 70vh;
+  }
+}
+
+/* Landscape orientation for mobile devices */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .hero .swiper-slide {
+    height: 100vh;
+  }
+
+  .hero .slide-overlay {
+    padding: 0.5rem;
+  }
+
+  .hero .slide-overlay h1 {
+    margin-bottom: 0.25rem;
+  }
+}
+
+/* High-resolution displays */
+@media screen and (min-width: 1536px) {
+  .hero .slide-overlay h1 {
+    font-size: 3rem;
+  }
+
+  .hero .slide-overlay p {
+    font-size: 1.5rem;
+  }
+}
