@@ -1,6 +1,7 @@
 <?php
 session_start();
 require('config/app.php');
+require('func/sanitize.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: index.php');

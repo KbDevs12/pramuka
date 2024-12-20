@@ -167,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
         $stmt = $conn->prepare($query);
 
-        $stmt->bind_param('issssssssiississi', $id_kategori, $nama_sekolah, $pangkalan, $kwaran, $kwarlab, $alamat_sekolah, $pembina, $no_gugus, $no_telp, $jumlah_dibayarkan, $sisa_pembayaran, $regu, $tanggalTransaksi, $kodeUnik, $kodePembayaran, $status, $harga, $metode_pembayaran);
+        $stmt->bind_param('issssssssiississis', $id_kategori, $nama_sekolah, $pangkalan, $kwaran, $kwarlab, $alamat_sekolah, $pembina, $no_gugus, $no_telp, $jumlah_dibayarkan, $sisa_pembayaran, $regu, $tanggalTransaksi, $kodeUnik, $kodePembayaran, $status, $harga, $metode_pembayaran);
         $stmt->execute();
         $stmt->close();
     }

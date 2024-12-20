@@ -2,11 +2,12 @@
 // get_participants.php
 session_start();
 require('config/app.php');
+require('func/sanitize.php');
 
 header('Content-Type: application/json');
 
-$competition_id = $_GET['competition_id'] ?? null;
-$trx_code = $_GET['trx_code'] ?? null;
+$competition_id = sanitize_input($_GET['competition_id']) ?? null;
+$trx_code = sanitize_input($_GET['trx_code']) ?? null;
 
 if (!$competition_id || !$trx_code) {
     echo json_encode(['error' => 'Missing parameters']);
