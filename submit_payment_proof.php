@@ -47,7 +47,7 @@ $id_transaksi = $transaction['id'];
 
 // Konversi file gambar ke format base64
 $imageData = base64_encode(file_get_contents($file['tmp_name']));
-$base64Image = 'data:' . $file['type'] . ';base64,' . $imageData;
+$base64Image = $imageData;
 
 // Simpan bukti transaksi ke database
 $query = "INSERT INTO bukti_transaksi (id_transaksi, images) VALUES (?, ?)";

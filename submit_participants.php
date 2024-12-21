@@ -62,5 +62,7 @@ foreach ($_POST['participants'] as $index => $participant) {
         $_SESSION['error'] = 'Gagal menyimpan peserta: ' . $stmt->error;
         header('Location: pendaftaran.php?trx-code=' . $trx_code);
         exit;
+    } else {
+        header('Location: transaksi_status.php?trx-code' . $trx_code);
     }
 }

@@ -159,8 +159,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tanggalTransaksi = date('Y-m-d');
     $kodePembayaran = 'TRX-' . rand(1000, 9999) . '-' . rand(1, 99) . '-' . date('YY-mm-dd');
     $jumlah_dibayarkan = ($jenis_pembayaran == "dp") ? $harga * 0.5 + $kodeUnik : $harga + $kodeUnik;
-    $sisa_pembayaran = ($jenis_pembayaran == "dp") ? $harga * 0.5 : $harga;
-    $harga = ($jenis_pembayaran == "dp") ? $harga * 0.5 : $harga;
+    $sisa_pembayaran = ($jenis_pembayaran == "dp") ? $harga * 0.5 : 0;
+
     $status = 'pending';
     if ($registration_open) {
         $query = 'INSERT INTO transaksi (id_kategori, namaSekolah, pangkalan, kwaran, kwarlab, alamatSekolah, pembina, noGuDep, noTelp, jumlahDibayarkan, sisaPembayaran, regu, tanggal_transaksi, kodeUnik, kodeTransaksi, status, harga, metode_pembayaran)
