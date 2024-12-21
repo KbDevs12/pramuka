@@ -8,7 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-// Validasi dan sanitasi input
 if (!isset($_POST['trx_code']) || empty($_POST['trx_code'])) {
     echo "<p>Kode transaksi tidak valid.</p>";
     exit();
@@ -56,7 +55,7 @@ $stmt = $conn->prepare($query);
 $stmt->bind_param('is', $id_transaksi, $base64Image);
 
 if ($stmt->execute()) {
-    header('Location : index.php');
+    header('Location: index.php');
 } else {
     echo "<p>Terjadi kesalahan saat menyimpan bukti transaksi. Silakan coba lagi.</p>";
 }

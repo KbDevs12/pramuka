@@ -158,8 +158,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $kodeUnik = rand(100, 999);
     $tanggalTransaksi = date('Y-m-d');
     $kodePembayaran = 'TRX-' . rand(1000, 9999) . '-' . rand(1, 99) . '-' . date('YY-mm-dd');
-    $jumlah_dibayarkan = ($jenis_pembayaran == "DP") ? $harga * 0.5 + $kodeUnik : $harga + $kodeUnik;
-    $sisa_pembayaran = ($jenis_pembayaran == "DP") ? $harga * 0.5 : $harga;
+    $jumlah_dibayarkan = ($jenis_pembayaran == "dp") ? $harga * 0.5 + $kodeUnik : $harga + $kodeUnik;
+    $sisa_pembayaran = ($jenis_pembayaran == "dp") ? $harga * 0.5 : $harga;
+    $harga = ($jenis_pembayaran == "dp") ? $harga * 0.5 : $harga;
     $status = 'pending';
     if ($registration_open) {
         $query = 'INSERT INTO transaksi (id_kategori, namaSekolah, pangkalan, kwaran, kwarlab, alamatSekolah, pembina, noGuDep, noTelp, jumlahDibayarkan, sisaPembayaran, regu, tanggal_transaksi, kodeUnik, kodeTransaksi, status, harga, metode_pembayaran)
@@ -224,7 +225,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Payment Proof Form -->
         <form action="submit_payment_proof.php" method="POST" enctype="multipart/form-data" class="space-y-6">
             <div class="space-y-4">
-                <input type="hidden" name="trx_code" id="trx_code" value="<?php $kodePembayaran ?>">
+                <input type="hidden" name="trx_code" id="trx_code" value="<?php echo $kodePembayaran ?>">
                 <label for="payment_proof" class="block text-sm font-medium text-gray-700">Bukti Pembayaran
                     (Foto)</label>
                 <input type="file" id="payment_proof" name="payment_proof" accept=".jpg, .jpeg, .png"
