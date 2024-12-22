@@ -18,14 +18,6 @@ function normalize_school_name($name)
     return $name;
 }
 
-// function is_similar($name1, $name2, $threshold = 40)
-// {
-//     $distance = levenshtein($name1, $name2);
-//     $max_length = max(strlen($name1), strlen($name2));
-//     $similarity = (1 - $distance / $max_length) * 100;
-//     return $similarity >= $threshold;
-// }
-
 function get_price($kategori_perlombaan)
 {
     $current_date = date('Y-m-d');
@@ -77,7 +69,24 @@ foreach ($valid_periods as $period) {
 }
 
 if (!$registration_open) {
-    echo "<p>Pendaftaran ditutup untuk saat ini. Silakan coba lagi pada periode yang valid.</p>";
+    echo '<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Registrasi Ditutup</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="flex items-center justify-center h-screen bg-gray-100">
+        <div class="bg-white p-8 rounded shadow-lg text-center">
+            <svg class="mx-auto mb-4 w-12 h-12 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0a12 12 0 1012 12A12 12 0 0012 0zm0 21.75A9.75 9.75 0 1121.75 12 9.761 9.761 0 0112 21.75zM12 5.25a1.5 1.5 0 011.5 1.5v6a1.5 1.5 0 01-3 0v-6a1.5 1.5 0 011.5-1.5zm0 10.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/>
+            </svg>
+            <h1 class="text-2xl font-bold text-red-500">Pendaftaran Ditutup</h1>
+            <p class="text-gray-600 mt-2">Saat ini pendaftaran tidak tersedia. Silakan kembali di periode berikutnya.</p>
+        </div>
+    </body>
+    </html>';
     exit();
 }
 
@@ -111,7 +120,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if ($transaction_count >= 2) {
-        echo "<p>Transaksi ditolak. Nama sekolah sudah mencapai batas maksimum 2 transaksi.</p>";
+        echo '<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Transaksi Ditolak</title>
+            <link rel="icon" type="image/png" href="images/logo.PNG">
+            <link rel="apple-touch-icon" href="images/logo.PNG">
+            <link rel="shortcut icon" type="image/png" href="images/logo.PNG">
+            <script src="https://cdn.tailwindcss.com"></script>
+        </head>
+        <body class="flex items-center justify-center h-screen bg-gray-100">
+            <div class="bg-white p-8 rounded shadow-lg text-center">
+                <svg class="mx-auto mb-4 w-12 h-12 text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0a12 12 0 1012 12A12 12 0 0012 0zm0 21.75A9.75 9.75 0 1121.75 12 9.761 9.761 0 0112 21.75zM12 5.25a1.5 1.5 0 011.5 1.5v6a1.5 1.5 0 01-3 0v-6a1.5 1.5 0 011.5-1.5zm0 10.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/>
+                </svg>
+                <h1 class="text-2xl font-bold text-yellow-500">Transaksi Ditolak</h1>
+                <p class="text-gray-600 mt-2">Sekolah Anda telah mencapai batas maksimum 2 transaksi.</p>
+            </div>
+        </body>
+        </html>';
         exit();
     }
 
@@ -134,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Check session date for Sesi 1
-    if ($current_date >= '2025-01-06' && $current_date <= '2025-01-09') {
+    if ($current_date >= '2024-18-12' && $current_date <= '2025-01-09') {
         $stmt = $conn->prepare("SELECT COUNT(*) AS participant_count FROM transaksi WHERE tanggal_transaksi BETWEEN ? AND ? AND kategori_perlombaan = ?");
         $stmt->bind_param('sss', $start_date, $end_date, $kategori_perlombaan);
 
@@ -147,7 +176,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $participant_count = $data['participant_count'];
 
         if ($participant_count >= 10) {
-            echo "<p>Pendaftaran sudah ditutup untuk sesi 1, karena kuota sudah penuh.</p>";
+            echo '<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Transaksi Ditolak</title>
+                <link rel="icon" type="image/png" href="images/logo.PNG">
+                <link rel="apple-touch-icon" href="images/logo.PNG">
+                <link rel="shortcut icon" type="image/png" href="images/logo.PNG">
+                <script src="https://cdn.tailwindcss.com"></script>
+            </head>
+            <body class="flex items-center justify-center h-screen bg-gray-100">
+                <div class="container mx-auto my-12 p-8 bg-white shadow-xl rounded-lg">
+                <div class="text-center">
+                    <h1 class="text-3xl font-bold text-red-600">Pendaftaran Ditutup untuk Sesi 1</h1>
+                    <p class="text-lg text-gray-700 mt-4">Kuota peserta untuk sesi 1 telah penuh. Silakan coba lagi pada sesi berikutnya.</p>
+                    <a href="index.php" class="mt-6 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none">
+                        Kembali ke Halaman Utama
+                    </a>
+                </div>
+              </div>
+            </body>
+            </html>';
             exit();
         }
 
@@ -183,6 +234,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eduzillen | Pembayaran</title>
+    <link rel="icon" type="image/png" href="images/logo.PNG">
+    <link rel="apple-touch-icon" href="images/logo.PNG">
+    <link rel="shortcut icon" type="image/png" href="images/logo.PNG">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
