@@ -204,82 +204,79 @@ $latestTransaksi = $conn->query("
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const kategoriData = <?php
-        mysqli_data_seek($transaksiPerKategori, 0);
-        $categories = [];
-        $counts = [];
-        $amounts = [];
-        while ($row = $transaksiPerKategori->fetch_assoc()) {
-            $categories[] = $row['kategori'];
-            $counts[] = (int) $row['jumlah'];
-            $amounts[] = (int) $row['total_pendapatan'];
-        }
-        echo json_encode([
-            'labels' => $categories,
-            'data' => $counts,
-            'amounts' => $amounts
-        ]);
-        ?>;
-
-        // Chart configuration
         const ctx = document.getElementById('kategoriChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: kategoriData.labels,
-                datasets: [{
-                    label: 'Jumlah Transaksi',
-                    data: kategoriData.data,
-                    backgroundColor: [
-                        'rgba(59, 130, 246, 0.5)',  // blue
-                        'rgba(16, 185, 129, 0.5)',  // green
-                        'rgba(245, 158, 11, 0.5)',  // yellow
-                        'rgba(139, 92, 246, 0.5)',  // purple
-                        'rgba(236, 72, 153, 0.5)',  // pink
-                        'rgba(99, 102, 241, 0.5)'   // indigo
-                    ],
-                    borderColor: [
-                        'rgb(59, 130, 246)',
-                        'rgb(16, 185, 129)',
-                        'rgb(245, 158, 11)',
-                        'rgb(139, 92, 246)',
-                        'rgb(236, 72, 153)',
-                        'rgb(99, 102, 241)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
+
+        // Ambil data melalui AJAX
+        fetch('getKategoriData.php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data');
+                }
+                return response.json();
+            })
+            .then(kategoriData => {
+                // Render Chart
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: kategoriData.labels,
+                        datasets: [{
+                            label: 'Jumlah Transaksi',
+                            data: kategoriData.data,
+                            backgroundColor: [
+                                'rgba(59, 130, 246, 0.5)',  // blue
+                                'rgba(16, 185, 129, 0.5)',  // green
+                                'rgba(245, 158, 11, 0.5)',  // yellow
+                                'rgba(139, 92, 246, 0.5)',  // purple
+                                'rgba(236, 72, 153, 0.5)',  // pink
+                                'rgba(99, 102, 241, 0.5)'   // indigo
+                            ],
+                            borderColor: [
+                                'rgb(59, 130, 246)',
+                                'rgb(16, 185, 129)',
+                                'rgb(245, 158, 11)',
+                                'rgb(139, 92, 246)',
+                                'rgb(236, 72, 153)',
+                                'rgb(99, 102, 241)'
+                            ],
+                            borderWidth: 1
+                        }]
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                const value = context.raw;
-                                const amount = kategoriData.amounts[context.dataIndex];
-                                return [
-                                    `${value} transaksi`,
-                                    `Rp ${amount.toLocaleString('id-ID')}`
-                                ];
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        const value = context.raw;
+                                        const amount = kategoriData.amounts[context.dataIndex];
+                                        return [
+                                            `${value} transaksi`,
+                                            `Rp ${amount.toLocaleString('id-ID')}`
+                                        ];
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
                             }
                         }
                     }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1
-                        }
-                    }
-                }
-            }
-        });
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Gagal memuat data chart.');
+            });
     });
 </script>

@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eduzillen | Registrasi</title>
+    <link rel="icon" type="image/png" href="images/logo.PNG">
+    <link rel="apple-touch-icon" href="images/logo.PNG">
+    <link rel="shortcut icon" type="image/png" href="images/logo.PNG">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/main.css">

@@ -9,7 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("si", $status, $id);
 
     if ($stmt->execute()) {
-        header('Location: index.php?page=transaksi');
+        // header('Location: index.php?page=transaksi');
+        echo json_encode(['success' => true]);
     } else {
         echo json_encode(['success' => false, 'error' => 'Failed to update status']);
     }

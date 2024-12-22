@@ -63,6 +63,6 @@ foreach ($_POST['participants'] as $index => $participant) {
         header('Location: pendaftaran.php?trx-code=' . $trx_code);
         exit;
     } else {
-        header('Location: transaksi_status.php?trx-code' . $trx_code);
+        header('Location: transaksi_status.php?trx-code=' . $trx_code);
     }
 }

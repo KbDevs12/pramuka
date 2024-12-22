@@ -10,22 +10,16 @@ if (!isset($_SESSION['key'])) {
     exit();
 }
 
-$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-$limit = 10;
-$offset = ($page - 1) * $limit;
-
-$totalRows = $conn->query("SELECT COUNT(*) as count FROM transaksi")->fetch_assoc()['count'];
-$totalPages = ceil($totalRows / $limit);
-
 $result = $conn->query("
-    SELECT t.*, k.nama as kategori_nama, p.nama as nama_perlombaan, bt.images as bukti_transaksi
+    SELECT t.*, k.nama as kategori_nama, bt.images as bukti_transaksi
     FROM transaksi t
     JOIN kategori k ON t.id_kategori = k.id
-    JOIN perlombaan p ON p.kategori_id = k.id
     LEFT JOIN bukti_transaksi bt ON bt.id_transaksi = t.id
     ORDER BY t.tanggal_transaksi DESC
-    LIMIT $offset, $limit
 ");
+
+// Get unique categories for filter
+$categories = $conn->query("SELECT DISTINCT nama FROM kategori ORDER BY nama");
 
 if (isset($_POST['update_status'])) {
     $id = $_POST['id'];
@@ -43,24 +37,45 @@ if (isset($_POST['update_status'])) {
 ?>
 
 <div class="bg-white rounded-lg shadow-md p-6">
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <h2 class="text-2xl font-semibold">Data Transaksi</h2>
-        <div class="flex gap-2">
+
+        <!-- Search and Filter Section -->
+        <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+            <input type="text" id="searchInput" placeholder="Cari transaksi..."
+                class="border rounded-lg px-4 py-2 w-full md:w-64">
+
+            <select id="statusFilter" class="border rounded-lg px-4 py-2 w-full md:w-auto">
+                <option value="">Semua Status</option>
+                <option value="pending">Pending</option>
+                <option value="success">Success</option>
+                <option value="failed">Failed</option>
+                <option value="lunas">Lunas</option>
+            </select>
+
+            <select id="categoryFilter" class="border rounded-lg px-4 py-2 w-full md:w-auto">
+                <option value="">Semua Kategori</option>
+                <?php while ($category = $categories->fetch_assoc()): ?>
+                    <option value="<?= htmlspecialchars($category['nama']) ?>">
+                        <?= htmlspecialchars($category['nama']) ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
+
             <button onclick="exportData()"
-                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">
+                class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition w-full md:w-auto">
                 <i class="fas fa-file-excel mr-2"></i>Export Excel
             </button>
         </div>
     </div>
 
     <div class="overflow-x-auto">
-        <table class="min-w-full table-auto">
+        <table class="min-w-full table-auto" id="transactionTable">
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kode</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sekolah</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kategori</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Perlombaan</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Harga</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dibayarkan</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sisa</th>
@@ -70,22 +85,23 @@ if (isset($_POST['update_status'])) {
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200">
-                <?php while ($row = $result->fetch_assoc()):
-
-                    ?>
-                    <tr>
+            <tbody class="divide-y divide-gray-200" id="tableBody">
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr class="transaction-row" data-status="<?= strtolower($row['status']) ?>"
+                        data-category="<?= htmlspecialchars($row['kategori_nama']) ?>" data-search="<?= strtolower($row['kodeTransaksi'] . ' ' .
+                              $row['namaSekolah'] . ' ' .
+                              $row['kategori_nama']) ?>">
                         <td class="px-6 py-4"><?= $row['kodeTransaksi'] ?></td>
                         <td class="px-6 py-4"><?= $row['namaSekolah'] ?></td>
                         <td class="px-6 py-4"><?= $row['kategori_nama'] ?></td>
-                        <td class="px-6 py-4"><?= $row['nama_perlombaan'] ?></td>
                         <td class="px-6 py-4">Rp <?= number_format($row['harga'], 0, ',', '.') ?></td>
                         <td class="px-6 py-4">Rp <?= number_format($row['jumlahDibayarkan'], 0, ',', '.') ?></td>
-                        <td class="px-6 py-4">Rp <?= number_format($row["sisaPembayaran"], 0, ',', '.') ?></td>
-                        <td class="px-6 py-4"> <?php if (!empty($row['bukti_transaksi'])): ?>
+                        <td class="px-6 py-4">Rp <?= number_format($row['sisaPembayaran'], 0, ',', '.') ?></td>
+                        <td class="px-6 py-4">
+                            <?php if (!empty($row['bukti_transaksi'])): ?>
                                 <img src="data:image/png;base64,<?= htmlspecialchars($row['bukti_transaksi']) ?>"
                                     onclick="openImageModal('data:image/png;base64,<?= htmlspecialchars($row['bukti_transaksi']) ?>')"
-                                    alt="Bukti Transaksi" />
+                                    alt="Bukti Transaksi" class="w-16 h-16 object-cover cursor-pointer" />
                             <?php else: ?>
                                 <span class="text-gray-500">Tidak ada bukti transaksi</span>
                             <?php endif; ?>
@@ -114,22 +130,10 @@ if (isset($_POST['update_status'])) {
             </tbody>
         </table>
     </div>
-
-    <!-- Pagination -->
-    <div class="mt-4 flex justify-center">
-        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                <a href="?pages=<?= $i ?>"
-                    class="relative inline-flex items-center px-4 py-2 border <?= $i === $page ? 'bg-blue-50 border-blue-500 text-blue-600' : 'border-gray-300' ?> text-sm font-medium">
-                    <?= $i ?>
-                </a>
-            <?php endfor; ?>
-        </nav>
-    </div>
 </div>
 
 <!-- Modal for Image Preview -->
-<div id="imageModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex justify-center items-center">
+<div id="imageModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex justify-center items-center z-50">
     <div class="bg-white p-6 rounded-lg shadow-lg">
         <img id="imagePreview" src="" alt="Bukti Transaksi" class="max-w-full max-h-96">
         <div class="mt-4 flex justify-end">
@@ -142,8 +146,8 @@ if (isset($_POST['update_status'])) {
 </div>
 
 <!-- Modal Detail Transaksi -->
-<div id="detailModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-2/3 mx-auto mt-20">
+<div id="detailModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-40 flex justify-center items-center">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full sm:w-2/3 md:w-1/2 lg:w-1/3 mx-auto mt-20">
         <h3 class="text-xl font-semibold mb-4">Detail Transaksi</h3>
         <div id="detailContent" class="space-y-4">
             <!-- Content will be loaded here -->
@@ -158,7 +162,7 @@ if (isset($_POST['update_status'])) {
 </div>
 
 <!-- Modal Update Status -->
-<div id="statusModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
+<div id="statusModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-30">
     <div class="bg-white p-8 rounded-lg shadow-lg w-1/3 mx-auto mt-20">
         <h3 class="text-xl font-semibold mb-4">Update Status Transaksi</h3>
         <form id="statusForm" method="POST">
@@ -188,6 +192,34 @@ if (isset($_POST['update_status'])) {
 </div>
 
 <script>
+    function filterTable() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+        const categoryFilter = document.getElementById('categoryFilter').value.toLowerCase();
+        const rows = document.getElementsByClassName('transaction-row');
+
+        Array.from(rows).forEach(row => {
+            const searchText = row.getAttribute('data-search');
+            const status = row.getAttribute('data-status');
+            const category = row.getAttribute('data-category').toLowerCase();
+
+            const matchesSearch = searchText.includes(searchTerm);
+            const matchesStatus = !statusFilter || status === statusFilter;
+            const matchesCategory = !categoryFilter || category === categoryFilter;
+
+            if (matchesSearch && matchesStatus && matchesCategory) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    // Add event listeners for real-time filtering
+    document.getElementById('searchInput').addEventListener('input', filterTable);
+    document.getElementById('statusFilter').addEventListener('change', filterTable);
+    document.getElementById('categoryFilter').addEventListener('change', filterTable);
+
     async function viewDetail(id) {
         const response = await fetch(`get_transaksi_detail.php?id=${id}`);
         const data = await response.json();
@@ -247,11 +279,12 @@ if (isset($_POST['update_status'])) {
                 });
 
                 const result = await response.json();
+
                 if (result.success) {
-                    Swal.fire('Berhasil!', result.message, 'success');
+                    Swal.fire('Berhasil!', result.message, 'success').then(() => {
+                        window.location.href = 'index.php';
+                    });
                     closeStatusModal();
-                    // Refresh data on the table (optional)
-                    location.reload();
                 } else {
                     Swal.fire('Gagal!', result.message, 'error');
                 }

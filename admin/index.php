@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel Eduzille</title>
+    <link rel="icon" type="image/png" href="../images/logo.PNG">
+    <link rel="apple-touch-icon" href="../images/logo.PNG">
+    <link rel="shortcut icon" type="image/png" href="../images/logo.PNG">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
@@ -92,8 +95,11 @@
     <!-- Overlay -->
     <div id="overlay" class="fixed inset-0 bg-black opacity-50 z-30 hidden lg:hidden"></div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
         // Sidebar Toggle
+
         const sidebar = document.getElementById('sidebar');
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const sidebarClose = document.getElementById('sidebar-close');
@@ -120,7 +126,6 @@
         sidebarClose.addEventListener('click', toggleSidebar);
         overlay.addEventListener('click', toggleSidebar);
         desktopSidebarClose.addEventListener('click', closeSidebarDesktop);
-
         // Page Loading
         function loadPage(page) {
             const xhr = new XMLHttpRequest();
@@ -129,7 +134,6 @@
                 if (xhr.status === 200) {
                     mainContent.innerHTML = xhr.responseText;
 
-                    // Execute scripts in the new content
                     const scripts = mainContent.getElementsByTagName('script');
                     for (let script of scripts) {
                         const newScript = document.createElement('script');
