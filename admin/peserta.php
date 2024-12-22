@@ -12,7 +12,7 @@ if (!isset($_SESSION['key'])) {
 
 $query = "
     SELECT 
-        p.*, t.namaSekolah, t.kodeTransaksi, l.id as perlombaan_id, l.kategori_id, k.nama as kategori_nama
+        p.*, t.namaSekolah, t.kodeTransaksi, l.id as perlombaan_id, l.nama as nama_lomba, l.kategori_id, k.nama as kategori_nama
     FROM peserta p
     JOIN transaksi t ON p.idTransaksi = t.id
     LEFT JOIN perlombaan l ON p.id_perlombaan = l.id
@@ -45,6 +45,7 @@ $kategoriList = $kategoriQuery->fetch_all(MYSQLI_ASSOC);
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sekolah</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Perlombaan</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tempat Lahir</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal Lahir</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Foto</th>
@@ -77,11 +78,14 @@ $kategoriList = $kategoriQuery->fetch_all(MYSQLI_ASSOC);
                                             <?= htmlspecialchars($peserta['kodeTransaksi']) ?>
                                         </span>
                                     </td>
+                                    <td class="px-6 py-4"><?= htmlspecialchars($peserta['nama_lomba']) ?></td>
                                     <td class="px-6 py-4"><?= htmlspecialchars($peserta['tempat_lahir']) ?></td>
                                     <td class="px-6 py-4">
                                         <?= date('d/m/Y', strtotime($peserta['tanggal_lahir'])) ?>
                                     </td>
-                                    <td class="px-6 py-4"><img src="data:image/jpeg;base64,<?php echo $peserta['image'] ?>" alt="">
+                                    <td class="px-6 py-4"><img src="data:image/jpeg;base64,<?php echo $peserta['image'] ?>"
+                                            alt="foto peserta"
+                                            onclick="openImageModal('data:image/png;base64,<?= htmlspecialchars($peserta['image']) ?>')">
                                     </td>
                                     <td class="px-6 py-4"><?= htmlspecialchars($peserta['jabatan']) ?></td>
                                     <td class="px-6 py-4">
@@ -171,10 +175,22 @@ $kategoriList = $kategoriQuery->fetch_all(MYSQLI_ASSOC);
     </div>
 </div>
 
+<div id="imageModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex justify-center items-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg">
+        <img id="imagePreview" src="" alt="Bukti Transaksi" class="max-w-full max-h-96">
+        <div class="mt-4 flex justify-end">
+            <button onclick="closeImageModal()"
+                class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">
+                Tutup
+            </button>
+        </div>
+    </div>
+</div>
+
 <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
     <div class="bg-white rounded-lg p-6 w-full max-w-md mx-auto mt-20">
         <h3 class="text-xl font-semibold mb-4">Konfirmasi Penghapusan</h3>
-        <form id="deleteForm" method="POST" action="peserta_actions.php">
+        <form id="deleteForm" method="POST">
             <input type="hidden" name="id" id="delete_id">
             <p class="mb-4">Apakah Anda yakin ingin menghapus peserta ini? Data yang dihapus tidak dapat dikembalikan.
             </p>
@@ -338,4 +354,16 @@ $kategoriList = $kategoriQuery->fetch_all(MYSQLI_ASSOC);
             closeModal();
         }
     });
+
+    function openImageModal(imageSrc) {
+        const imageModal = document.getElementById('imageModal');
+        const imagePreview = document.getElementById('imagePreview');
+        imagePreview.src = imageSrc;
+        imageModal.classList.remove('hidden');
+    }
+
+    function closeImageModal() {
+        const imageModal = document.getElementById('imageModal');
+        imageModal.classList.add('hidden');
+    }
 </script>
