@@ -72,6 +72,32 @@
     $proof_result = $stmt_proof->get_result();
     $has_proof = $proof_result->num_rows > 0;
 
+    if (empty($trxcode) || !$transaction || !$has_proof) {
+        ?>
+        <div class="container mx-auto my-12 p-8 bg-white rounded-lg shadow-md">
+            <div class="text-center">
+                <div class="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </div>
+                <h1 class="text-4xl font-extrabold text-red-500 mb-4">Data Tidak Lengkap</h1>
+                <p class="text-lg text-gray-700 mb-6">Kode transaksi tidak ditemukan. Pastikan Anda memasukkan kode yang
+                    benar.</p>
+                <button
+                    class="bg-blue-600 text-white px-10 py-3 rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg transition-transform transform hover:scale-105"
+                    onclick="window.history.back()">
+                    Kembali
+                </button>
+            </div>
+        </div>
+
+        <?php
+        exit();
+    }
+
+
     // Get competition details
     $query_competitions = 'SELECT * FROM perlombaan WHERE kategori_id = ?';
     $stmt_competitions = $conn->prepare($query_competitions);
@@ -258,17 +284,17 @@
                 const container = document.getElementById('participant-container');
                 container.innerHTML = '';
                 const formHtml = `
-                                                                                                                                                                                                                                                                                                                        <form action="update_participants.php" method="POST" enctype="multipart/form-data" class="space-y-6">
-                                                                                                                                                                                                                                                                                                                            <input type="hidden" name="competition_id" value="${competitionId}">
-                                                                                                                                                                                                                                                                                                                            <input type="hidden" name="trx_code" value="<?php echo $trxcode; ?>">
-                                                                                                                                                                                                                                                                                                                            ${generateParticipantForms(participants)}
-                                                                                                                                                                                                                                                                                                                            <div class="text-center">
-                                                                                                                                                                                                                                                                                                                                <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                                                                                                                                                                                                                                                                                                                    Update Data Peserta
-                                                                                                                                                                                                                                                                                                                                </button>
-                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                        </form>
-                                                                                                                                                                                                                                                                                                                    `;
+                                                                                                                                                                                                                                                                                                                                        <form action="update_participants.php" method="POST" enctype="multipart/form-data" class="space-y-6">
+                                                                                                                                                                                                                                                                                                                                            <input type="hidden" name="competition_id" value="${competitionId}">
+                                                                                                                                                                                                                                                                                                                                            <input type="hidden" name="trx_code" value="<?php echo $trxcode; ?>">
+                                                                                                                                                                                                                                                                                                                                            ${generateParticipantForms(participants)}
+                                                                                                                                                                                                                                                                                                                                            <div class="text-center">
+                                                                                                                                                                                                                                                                                                                                                <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                                                                                                                                                                                                                                                                                                                                    Update Data Peserta
+                                                                                                                                                                                                                                                                                                                                                </button>
+                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                        </form>
+                                                                                                                                                                                                                                                                                                                                    `;
 
                 container.innerHTML = formHtml;
                 initializeImagePreviews();
@@ -280,17 +306,17 @@
                 const container = document.getElementById('participant-container');
 
                 const formHtml = `
-                                                                                                                                                                                                                                                                                                                        <form action="submit_participants.php" method="POST" enctype="multipart/form-data" class="space-y-6">
-                                                                                                                                                                                                                                                                                                                            <input type="hidden" name="competition_id" value="${competitionId}">
-                                                                                                                                                                                                                                                                                                                            <input type="hidden" name="trx_code" value="<?php echo $trxcode; ?>">
-                                                                                                                                                                                                                                                                                                                            ${generateEmptyParticipantForms(participantCount)}
-                                                                                                                                                                                                                                                                                                                            <div class="text-center">
-                                                                                                                                                                                                                                                                                                                                <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                                                                                                                                                                                                                                                                                                                    Daftar Peserta
-                                                                                                                                                                                                                                                                                                                                </button>
-                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                        </form>
-                                                                                                                                                                                                                                                                                                                    `;
+                                                                                                                                                                                                                                                                                                                                        <form action="submit_participants.php" method="POST" enctype="multipart/form-data" class="space-y-6">
+                                                                                                                                                                                                                                                                                                                                            <input type="hidden" name="competition_id" value="${competitionId}">
+                                                                                                                                                                                                                                                                                                                                            <input type="hidden" name="trx_code" value="<?php echo $trxcode; ?>">
+                                                                                                                                                                                                                                                                                                                                            ${generateEmptyParticipantForms(participantCount)}
+                                                                                                                                                                                                                                                                                                                                            <div class="text-center">
+                                                                                                                                                                                                                                                                                                                                                <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                                                                                                                                                                                                                                                                                                                                    Daftar Peserta
+                                                                                                                                                                                                                                                                                                                                                </button>
+                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                        </form>
+                                                                                                                                                                                                                                                                                                                                    `;
 
                 container.innerHTML = formHtml;
                 initializeImagePreviews();
@@ -304,68 +330,68 @@
 
                 return participants.map((participant, index) => {
                     return `
-                                                                                                                                                                <div class="participant-form border-t pt-6 mb-6">
-                                                                                                                                                                    <h3 class="text-lg font-semibold mb-4">Peserta ${index + 1}</h3>
+                                                                                                                                                                                <div class="participant-form border-t pt-6 mb-6">
+                                                                                                                                                                                    <h3 class="text-lg font-semibold mb-4">Peserta ${index + 1}</h3>
 
-                                                                                                                                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                                                                                                                                        <div>
-                                                                                                                                                                            <label class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-                                                                                                                                                                            <input type="text" 
-                                                                                                                                                                                   name="participants[${index + 1}][nama]" 
-                                                                                                                                                                                   value="${participant.nama || ''}"
-                                                                                                                                                                                   required 
-                                                                                                                                                                                   class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
-                                                                                                                                                                        </div>
+                                                                                                                                                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                                                                                                                                                        <div>
+                                                                                                                                                                                            <label class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                                                                                                                                                                                            <input type="text" 
+                                                                                                                                                                                                   name="participants[${index + 1}][nama]" 
+                                                                                                                                                                                                   value="${participant.nama || ''}"
+                                                                                                                                                                                                   required 
+                                                                                                                                                                                                   class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
+                                                                                                                                                                                        </div>
 
-                                                                                                                                                                        <div>
-                                                                                                                                                                            <label class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
-                                                                                                                                                                            <input type="text" 
-                                                                                                                                                                                   name="participants[${index + 1}][tempat_lahir]" 
-                                                                                                                                                                                   value="${participant.tempat_lahir || ''}"
-                                                                                                                                                                                   required 
-                                                                                                                                                                                   class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
-                                                                                                                                                                        </div>
+                                                                                                                                                                                        <div>
+                                                                                                                                                                                            <label class="block text-sm font-medium text-gray-700">Tempat Lahir</label>
+                                                                                                                                                                                            <input type="text" 
+                                                                                                                                                                                                   name="participants[${index + 1}][tempat_lahir]" 
+                                                                                                                                                                                                   value="${participant.tempat_lahir || ''}"
+                                                                                                                                                                                                   required 
+                                                                                                                                                                                                   class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
+                                                                                                                                                                                        </div>
 
-                                                                                                                                                                        <div>
-                                                                                                                                                                            <label class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
-                                                                                                                                                                            <input type="date" 
-                                                                                                                                                                                   name="participants[${index + 1}][tanggal_lahir]" 
-                                                                                                                                                                                   value="${participant.tanggal_lahir || ''}"
-                                                                                                                                                                                   required 
-                                                                                                                                                                                   class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
-                                                                                                                                                                        </div>
+                                                                                                                                                                                        <div>
+                                                                                                                                                                                            <label class="block text-sm font-medium text-gray-700">Tanggal Lahir</label>
+                                                                                                                                                                                            <input type="date" 
+                                                                                                                                                                                                   name="participants[${index + 1}][tanggal_lahir]" 
+                                                                                                                                                                                                   value="${participant.tanggal_lahir || ''}"
+                                                                                                                                                                                                   required 
+                                                                                                                                                                                                   class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
+                                                                                                                                                                                        </div>
 
-                                                                                                                                                                        <div>
-                                                                                                                                                                            <label class="block text-sm font-medium text-gray-700">Jabatan</label>
-                                                                                                                                                                            <input type="text" 
-                                                                                                                                                                                   name="participants[${index + 1}][jabatan]" 
-                                                                                                                                                                                   value="${participant.jabatan || ''}"
-                                                                                                                                                                                   required 
-                                                                                                                                                                                   class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
-                                                                                                                                                                        </div>
-                                                                                                                                                                    </div>
+                                                                                                                                                                                        <div>
+                                                                                                                                                                                            <label class="block text-sm font-medium text-gray-700">Jabatan</label>
+                                                                                                                                                                                            <input type="text" 
+                                                                                                                                                                                                   name="participants[${index + 1}][jabatan]" 
+                                                                                                                                                                                                   value="${participant.jabatan || ''}"
+                                                                                                                                                                                                   required 
+                                                                                                                                                                                                   class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
+                                                                                                                                                                                        </div>
+                                                                                                                                                                                    </div>
 
-                                                                                                                                                                    <div class="mt-4">
-                                                                                                                                                                        <label class="block text-sm font-medium text-gray-700">Foto Peserta</label>
-                                                                                                                                                                        <input type="file" 
-                                                                                                                                                                               name="participants[${index + 1}][image]" 
-                                                                                                                                                                               accept="image/*"
-                                                                                                                                                                               class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
-                                                                                                                                                                        <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, atau JPEG (Max 2MB)</p>
-                                                                                                                                                                    </div>
+                                                                                                                                                                                    <div class="mt-4">
+                                                                                                                                                                                        <label class="block text-sm font-medium text-gray-700">Foto Peserta</label>
+                                                                                                                                                                                        <input type="file" 
+                                                                                                                                                                                               name="participants[${index + 1}][image]" 
+                                                                                                                                                                                               accept="image/*"
+                                                                                                                                                                                               class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md">
+                                                                                                                                                                                        <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, atau JPEG (Max 2MB)</p>
+                                                                                                                                                                                    </div>
 
-                                                                                                                                                                    <div class="mt-4 preview-image-container ${participant.image ? '' : 'hidden'}">
-                                                                                                                                                                        <img src="${participant.image ? 'data:image/*;base64,' + participant.image : ''}" 
-                                                                                                                                                                             alt="Preview" 
-                                                                                                                                                                             class="preview-image max-w-xs h-auto object-contain rounded-lg">
-                                                                                                                                                                        <button type="button" 
-                                                                                                                                                                                class="text-red-600 mt-2" 
-                                                                                                                                                                                onclick="removeImage(${index + 1})">
-                                                                                                                                                                            Hapus Foto
-                                                                                                                                                                        </button>
-                                                                                                                                                                    </div>
-                                                                                                                                                                </div>
-                                                                                                                                                            `;
+                                                                                                                                                                                    <div class="mt-4 preview-image-container ${participant.image ? '' : 'hidden'}">
+                                                                                                                                                                                        <img src="${participant.image ? 'data:image/*;base64,' + participant.image : ''}" 
+                                                                                                                                                                                             alt="Preview" 
+                                                                                                                                                                                             class="preview-image max-w-xs h-auto object-contain rounded-lg">
+                                                                                                                                                                                        <button type="button" 
+                                                                                                                                                                                                class="text-red-600 mt-2" 
+                                                                                                                                                                                                onclick="removeImage(${index + 1})">
+                                                                                                                                                                                            Hapus Foto
+                                                                                                                                                                                        </button>
+                                                                                                                                                                                    </div>
+                                                                                                                                                                                </div>
+                                                                                                                                                                            `;
                 }).join('');
             }
             function generateEmptyParticipantForms(count) {
