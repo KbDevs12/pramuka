@@ -1,5 +1,14 @@
 <?php
-require_once('../config/app.php');
+require('../config/app.php');
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (!isset($_SESSION['key'])) {
+    echo json_encode(['error' => 'Unauthorized']);
+    exit();
+}
 
 $query = "
     SELECT 

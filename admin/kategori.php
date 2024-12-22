@@ -2,8 +2,12 @@
 session_start();
 require('../config/app.php');
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 if (!isset($_SESSION['key'])) {
-    header('Location: login.php');
+    echo json_encode(['error' => 'Unauthorized']);
     exit();
 }
 

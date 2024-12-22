@@ -2,6 +2,15 @@
 require_once('../config/app.php');
 ob_start();
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (!isset($_SESSION['key'])) {
+    echo json_encode(['error' => 'Unauthorized']);
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
 

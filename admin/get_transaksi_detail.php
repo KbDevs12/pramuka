@@ -1,6 +1,15 @@
 <?php
 require('../config/app.php');
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (!isset($_SESSION['key'])) {
+    echo json_encode(['error' => 'Unauthorized']);
+    exit();
+}
+
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     http_response_code(400);
     echo json_encode(['error' => 'Invalid or missing ID']);

@@ -2,11 +2,15 @@
 session_start();
 require('../config/app.php');
 require('../func/sanitize.php');
-if (!isset($_SESSION['key'])) {
-    header('Location: login.php');
-    exit();
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
 }
 
+if (!isset($_SESSION['key'])) {
+    echo json_encode(['error' => 'Unauthorized']);
+    exit();
+}
 // Create
 if (isset($_POST['create'])) {
     $nama = sanitize_input($_POST['nama']);

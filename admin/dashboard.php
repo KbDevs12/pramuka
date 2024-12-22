@@ -22,8 +22,13 @@ $totalPendapatan = $conn->query("
 
 // Get total pangkalan count
 $totalPangkalan = $conn->query("
-    SELECT COUNT(DISTINCT pangkalan) as total 
-    FROM transaksi"
+SELECT SUM(total) AS total
+FROM (
+    SELECT COUNT(DISTINCT pangkalan) AS total
+    FROM transaksi
+    GROUP BY namaSekolah
+) AS subquery;
+"
 )->fetch_assoc()['total'];
 
 // Get transactions by category with percentage
