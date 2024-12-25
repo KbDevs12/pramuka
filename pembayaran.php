@@ -176,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Check session date for Sesi 1
-    if ($current_date >= '2024-18-12' && $current_date <= '2025-01-09') {
+    if ($current_date >= '2024-12-12' && $current_date <= '2025-01-09') {
         $stmt = $conn->prepare("SELECT COUNT(*) AS participant_count FROM transaksi WHERE tanggal_transaksi BETWEEN ? AND ? AND kategori_perlombaan = ?");
         $stmt->bind_param('sss', $start_date, $end_date, $kategori_perlombaan);
 
