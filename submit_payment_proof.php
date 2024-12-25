@@ -55,7 +55,7 @@ $stmt = $conn->prepare($query);
 $stmt->bind_param('is', $id_transaksi, $base64Image);
 
 if ($stmt->execute()) {
-    header('Location: index.php');
+    header('Location: payment_success.php?trx-code=' . $id_transaksi);
 } else {
     echo "<p>Terjadi kesalahan saat menyimpan bukti transaksi. Silakan coba lagi.</p>";
 }

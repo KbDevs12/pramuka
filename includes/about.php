@@ -89,7 +89,7 @@
                         </div>
                         <div>
                             <h3 class="font-semibold text-gray-800">Kuota</h3>
-                            <p class="text-gray-600">100 Sangga</p>
+                            <p class="text-gray-600">100 Sangga (Luar Jabodetabek)</p>
                         </div>
                     </div>
 

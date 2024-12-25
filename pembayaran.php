@@ -10,6 +10,19 @@ function sanitize_input($data)
     return $data;
 }
 
+function isJabodetabek($address)
+{
+    global $jabodetabek;
+    foreach ($jabodetabek as $region => $areas) {
+        foreach ($areas as $area) {
+            if (stripos($address, $area) !== false || stripos($address, $region) !== false) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 function normalize_school_name($name)
 {
     $name = strtolower($name);
@@ -56,7 +69,7 @@ $current_date = date('Y-m-d');
 $registration_open = false;
 
 $valid_periods = [
-    ['start' => '2024-12-18', 'end' => '2025-01-09'],
+    ['start' => '2025-01-06', 'end' => '2025-01-09'],
     ['start' => '2025-01-10', 'end' => '2025-02-20'],
     ['start' => '2025-02-21', 'end' => '2025-03-26']
 ];
@@ -223,6 +236,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 } else {
     header("Location: index.php");
+    exit();
+}
+
+$jabodetabek = [
+    'Jakarta' => [
+        'Kota Jakarta Pusat',
+        'Kota Jakarta Utara',
+        'Kota Jakarta Barat',
+        'Kota Jakarta Selatan',
+        'Kota Jakarta Timur',
+        'Kota Administrasi Kepulauan Seribu'
+    ],
+    'Bogor' => [
+        'Kota Bogor',
+        'Kabupaten Bogor'
+    ],
+    'Depok' => [
+        'Kota Depok'
+    ],
+    'Tangerang' => [
+        'Kota Tangerang',
+        'Kota Tangerang Selatan',
+        'Kabupaten Tangerang'
+    ],
+    'Bekasi' => [
+        'Kota Bekasi',
+        'Kabupaten Bekasi'
+    ]
+];
+
+$stmt = $conn->prepare("SELECT COUNT(*) as count FROM transaksi WHERE NOT (alamatSekolah LIKE '%Jakarta%' OR 
+        alamatSekolah LIKE '%Bogor%' OR alamatSekolah LIKE '%Depok%' OR alamatSekolah LIKE '%Tangerang%' OR 
+        alamatSekolah LIKE '%Bekasi%')");
+$stmt->execute();
+$result = $stmt->get_result();
+$non_jabodetabek_count = $result->fetch_assoc()['count'];
+
+if (!isJabodetabek($alamat_sekolah) && $non_jabodetabek_count >= 100) {
+    echo '<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Kuota Penuh</title>
+            <script src="https://cdn.tailwindcss.com"></script>
+        </head>
+        <body class="flex items-center justify-center h-screen bg-gray-100">
+            <div class="bg-white p-8 rounded shadow-lg text-center">
+                <h1 class="text-2xl font-bold text-red-500">Pendaftaran Ditutup</h1>
+                <p class="text-gray-600 mt-2">Kuota pendaftaran untuk wilayah luar Jabodetabek telah mencapai batas maksimal 100 peserta.</p>
+                <a href="index.php" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Kembali ke Beranda</a>
+            </div>
+        </body>
+        </html>';
     exit();
 }
 ?>

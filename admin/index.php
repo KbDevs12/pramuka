@@ -1,3 +1,12 @@
+<?php
+session_start();
+require('../config/app.php');
+
+if (!isset($_SESSION['key'])) {
+    header('Location: login.php');
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 

@@ -7,6 +7,7 @@
             <a href="#top" class="text-white text-nav">Beranda</a>
             <a href="#pendaftaran" class="text-white text-nav">Pendaftaran</a>
             <a href="#tentang" class="text-white text-nav">Tentang</a>
+            <a href="#" class="text-white text-nav">Panduan</a>
         </div>
         <!-- Menu button -->
         <button id="menu-toggle" class="block md:hidden text-white hover:text-secondary focus:outline-none">
@@ -26,5 +27,6 @@
         <a href="#" class="block text-white hover:text-secondary py-2">Beranda</a>
         <a href="#pendaftaran" class="block text-white hover:text-secondary py-2">Pendaftaran</a>
         <a href="#tentang" class="block text-white hover:text-secondary py-2">Tentang</a>
+        <a href="#" class="block text-white hover:text-secondary py-2">Panduan</a>
     </div>
 </nav>
