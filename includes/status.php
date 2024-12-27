@@ -48,7 +48,9 @@
             </div>
         </div>
     </div>
+
     <div class="grid md:grid-cols-3 gap-6 mt-12">
+        <!-- Info Cards -->
         <div class="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
             <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mb-4">
                 <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,4 +84,45 @@
             <p class="text-gray-600 text-sm">Tim support siap membantu kapan saja</p>
         </div>
     </div>
+
+    <!-- Additional Cards -->
+    <div class="grid md:grid-cols-2 gap-6 mt-8">
+        <!-- Total Registrants -->
+        <div class="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Jumlah Pendaftar</p>
+                    <p class="text-2xl font-bold text-blue-600 mt-2">
+                        <?= number_format($totalTransaksi) ?>
+                    </p>
+                </div>
+                <div class="p-3 bg-blue-50 rounded-lg">
+                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Bases -->
+        <div class="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500">Jumlah Pangkalan</p>
+                    <p class="text-2xl font-bold text-purple-600 mt-2">
+                        <?= number_format($totalPangkalan) ?>
+                    </p>
+                </div>
+                <div class="p-3 bg-purple-50 rounded-lg">
+                    <svg class="w-6 h-6 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </section>

@@ -9,7 +9,7 @@
         <!-- Content Container -->
         <div class="relative z-10">
             <div class="text-center mb-10">
-                <h2 class="font-bold text-3xl md:text-4xl text-gray-800 mb-4">
+                <h2 class="font-bold text-3xl md:text-4xl text-center text-gray-800 mb-4">
                     Gathering/Latihan Gabungan Resmi
                 </h2>
                 <p class="text-gray-600">Jabodetabek Open</p>

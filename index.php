@@ -1,3 +1,18 @@
+<?php
+require('config/app.php');
+
+$totalTransaksi = $conn->query("SELECT COUNT(*) as total FROM transaksi")->fetch_assoc()['total'];
+
+$totalPangkalan = $conn->query("
+SELECT SUM(total) AS total
+FROM (
+    SELECT COUNT(DISTINCT pangkalan) AS total
+    FROM transaksi
+    GROUP BY namaSekolah
+) AS subquery;
+"
+)->fetch_assoc()['total'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
