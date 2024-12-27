@@ -35,7 +35,7 @@
     <?php include('includes/hero.php'); ?>
     <!-- pendaftaran section -->
 
-    <div class="relative group">
+    <div class="relative z-40 group">
         <a href="https://wa.me/6282120060895" class="fixed right-3 bottom-5 rounded-full p-2 bg-secondary">
             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
                 <path fill="#fff"

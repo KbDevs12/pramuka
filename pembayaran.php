@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $nama_sekolah = sanitize_input($_POST["nama_sekolah"]);
     $pangkalan = sanitize_input($_POST["pangkalan"]);
     $kwaran = sanitize_input($_POST["kwaran"]);
-    $kwarlab = sanitize_input($_POST["kwarlab"]);
+    $kwarcab = sanitize_input($_POST["kwarcab"]);
     $pembina = sanitize_input($_POST["pembina"]);
     $alamat_sekolah = sanitize_input($_POST["alamat_sekolah"]);
     $no_gugus = sanitize_input($_POST["no_gugus"]);
@@ -167,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (
-        empty($nama_sekolah) || empty($pangkalan) || empty($kwaran) || empty($kwarlab) ||
+        empty($nama_sekolah) || empty($pangkalan) || empty($kwaran) || empty($kwarcab) ||
         empty($pembina) || empty($alamat_sekolah) || empty($no_gugus) || empty($no_telp) ||
         empty($metode_pembayaran) || empty($jenis_pembayaran) || empty($regu)
     ) {
@@ -226,11 +226,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $status = 'pending';
     if ($registration_open) {
-        $query = 'INSERT INTO transaksi (id_kategori, namaSekolah, pangkalan, kwaran, kwarlab, alamatSekolah, pembina, noGuDep, noTelp, jumlahDibayarkan, sisaPembayaran, regu, tanggal_transaksi, kodeUnik, kodeTransaksi, status, harga, metode_pembayaran)
+        $query = 'INSERT INTO transaksi (id_kategori, namaSekolah, pangkalan, kwaran, kwarcab, alamatSekolah, pembina, noGuDep, noTelp, jumlahDibayarkan, sisaPembayaran, regu, tanggal_transaksi, kodeUnik, kodeTransaksi, status, harga, metode_pembayaran)
         VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
         $stmt = $conn->prepare($query);
 
-        $stmt->bind_param('issssssssiississis', $id_kategori, $nama_sekolah, $pangkalan, $kwaran, $kwarlab, $alamat_sekolah, $pembina, $no_gugus, $no_telp, $jumlah_dibayarkan, $sisa_pembayaran, $regu, $tanggalTransaksi, $kodeUnik, $kodePembayaran, $status, $harga, $metode_pembayaran);
+        $stmt->bind_param('issssssssiississis', $id_kategori, $nama_sekolah, $pangkalan, $kwaran, $kwarcab, $alamat_sekolah, $pembina, $no_gugus, $no_telp, $jumlah_dibayarkan, $sisa_pembayaran, $regu, $tanggalTransaksi, $kodeUnik, $kodePembayaran, $status, $harga, $metode_pembayaran);
         $stmt->execute();
         $stmt->close();
     }

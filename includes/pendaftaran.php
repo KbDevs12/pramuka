@@ -35,10 +35,10 @@
             </div>
 
             <div class="space-y-2">
-                <label for="kwarlab" class="block text-sm font-semibold text-gray-700">Kwarlab</label>
-                <input type="text" id="kwarlab" name="kwarlab"
+                <label for="kwarcab" class="block text-sm font-semibold text-gray-700">kwarcab</label>
+                <input type="text" id="kwarcab" name="kwarcab"
                     class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition duration-200"
-                    placeholder="Masukkan kwarlab">
+                    placeholder="Masukkan kwarcab">
             </div>
 
             <div class="space-y-2">
