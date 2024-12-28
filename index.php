@@ -20,6 +20,25 @@ FROM (
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eduzillen | Registrasi</title>
+    <meta name="description"
+        content="Eduzillen menyediakan layanan registrasi untuk mempermudah transaksi dan pendaftaran siswa di berbagai sekolah.">
+    <meta name="keywords" content="Eduzillen, registrasi online, pendaftaran sekolah, transaksi edukasi">
+    <meta name="author" content="Eduzillen Team">
+    <meta property="og:title" content="Eduzillen | Registrasi">
+    <meta property="og:description"
+        content="Eduzillen menyediakan layanan registrasi untuk mempermudah transaksi dan pendaftaran siswa di berbagai sekolah.">
+    <meta property="og:image" content="images/logo.PNG">
+    <meta property="og:url" content="https://pramuka.eduzillenid.com/">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Eduzillen | Registrasi">
+    <meta name="twitter:description"
+        content="Eduzillen menyediakan layanan registrasi untuk mempermudah transaksi dan pendaftaran siswa di berbagai sekolah.">
+    <meta name="twitter:image" content="images/logo.PNG">
+    <meta name="twitter:site" content="@yourtwitterhandle">
+
     <link rel="icon" type="image/png" href="images/logo.PNG">
     <link rel="apple-touch-icon" href="images/logo.PNG">
     <link rel="shortcut icon" type="image/png" href="images/logo.PNG">
