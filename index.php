@@ -106,6 +106,7 @@ FROM (
     <script src="js/validator.js"></script>
     <script src="js/main.js"></script>
     <script src="js/swiper.config.js"></script>
+    <script src="js/animateCount.js"></script>
 </body>
 
 </html>
