@@ -1,5 +1,6 @@
 <?php
 require('config/app.php');
+$anehe = 1;
 
 $totalTransaksi = $conn->query("SELECT COUNT(*) as total FROM transaksi")->fetch_assoc()['total'];
 
